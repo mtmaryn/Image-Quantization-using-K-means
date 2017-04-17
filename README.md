@@ -1,2 +1,3 @@
 # Image-Quantization-using-K-means
-Python code for using machine learning algorthim K-means, to take an image and reduce the number of colors used to create this image.
+Python code which takes an image and reduces the number of colors used to create this image.
+Accomplished using K means clustering
