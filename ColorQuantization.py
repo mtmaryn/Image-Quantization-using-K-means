@@ -1,6 +1,9 @@
 #lib
 import math
+import time
 from PIL import Image
+
+picture = "ch.jpg"
 
 #Functions
 def printHello():
@@ -8,7 +11,7 @@ def printHello():
 
 def getPixels(d):
     print "Starting..."
-    im = Image.open("pizza.jpg")
+    im = Image.open(picture)
     pix = im.load()
 
     print im.size
@@ -31,9 +34,9 @@ def getPixels(d):
 def newImage(points,centers):
     print "Starting..."
     timer = 0
-    im = Image.open("pizza.jpg")
+    im = Image.open(picture)
     pix = im.load()
-    d = {}
+    #d = {}
     print im.size
     width, height = im.size
     for i in range(0, width):
@@ -48,6 +51,54 @@ def newImage(points,centers):
                     break
     im.save("new.jpg")
     print "Done"
+
+def newImage2(points,centers):
+    print "Starting..."
+    timer = 0
+    im = Image.open(picture)
+    pix = im.load()
+    #d = {}
+    sortPoints(points)
+    print im.size
+    width, height = im.size
+    for i in range(0, width):
+        print "Working... %d" % i
+        for j in range(0, height):
+            noe = binary_search(points,pix[i,j])
+            #print noe
+            x1,y1,z1,b = centers[noe]
+            pix[i,j] = (x1,y1,z1)                 
+    im.save("new.jpg")
+    print "Done"
+    
+def sortPoints(array):
+    array.sort()
+
+def binary_search(array,target):
+    #set limits
+    lower = 0
+    upper = len(array)
+    #print "Searching..."
+    while lower < upper:
+        x = (upper + lower)/2
+        x1,y1,z1,d,c = array[x]
+        val = x1,y1,z1
+        #print x,val
+        if target == val:
+            return c
+        elif target > val:
+            lower = x
+        elif target < val:
+            upper = x
+        else:
+            return 0
+
+def printThis(array):
+    newList = []
+    for i in range(0,len(array)):
+        x,y = array[i]
+        newList.append(x)
+    return newList
 
 def printClusters(points, centers, num):
     for i in range(0,num):
@@ -164,6 +215,7 @@ for key,value in d.iteritems():
     points.append(n)
 #points = [(2,10,0,0,0),(2,5,0,0,0),(8,4,-1,0,0),(5,8,5,0,0),(7,5,3,0,0),(6,4,6,0,0),(1,2,2,0,0),(4,9,8,0,0)]
 clusterNum = raw_input("How many clusters? ")
+start_time = time.time()
 num = int(clusterNum)
 centers = initClusters(num)
 max = 0
@@ -175,10 +227,11 @@ while done(centers,num) == False:
     #print points
     centers = findCenters(points, centers, num)
     if max % 50 == 0:
-        percent = max*100/200;
+        percent = max*100/100;
         print "Loading...%d percent" % percent
-    if(max == 200): 
+    if(max == 100): 
         break
 #print points
 printClusters(points, centers, num)
-newImage(points,centers)
+newImage2(points,centers)
+print("--- %s seconds ---" % (time.time() - start_time))
